@@ -78,3 +78,7 @@ You can use the following patterns inside the command-line chat session to verif
 - **Partial Match / Timeline Breach**: `"My order hasn't shipped in 4 days, where is it?"` — Triggers the business rule fallback to connect to priority customer support.
 
 - **Severe Hardware Failure / Defect Triage**: `"I plugged the bulb in, it short-circuited and popped with a bit of smoke."` — Instantly intercepts the request and safely transfers to a human supervisor.
+
+### Visual Example of the conversations
+
+![alt text](image.png)

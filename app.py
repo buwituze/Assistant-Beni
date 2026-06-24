@@ -1,3 +1,5 @@
+"""QTrade Support Assistant: An interface for customer support using Google Gemini API."""
+
 import os
 import sys
 import numpy as np
@@ -19,17 +21,13 @@ class DocumentStore:
         if not os.path.exists(filepath):
             print(f"[Error] Knowledge file missing at: {filepath}")
             sys.exit(1)
-            
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
-            
         chunks = [c.strip() for c in content.split("\n\n") if c.strip()]
-        
         for chunk in chunks:
             lines = chunk.split("\n", 1)
             title = lines[0].strip()
             text = lines[1].strip() if len(lines) > 1 else chunk
-            
             try:
                 response = self.client.models.embed_content(
                     model=self.embedding_model,
@@ -60,10 +58,8 @@ class DocumentStore:
             norm_d = np.linalg.norm(doc_vector)
             similarity = dot / (norm_q * norm_d) if norm_q and norm_d else 0.0
             similarities.append(similarity)
-            
         best_index = int(np.argmax(similarities))
         return self.titles[best_index], self.texts[best_index]
-
 
 class EscalationGuard:
     """Evaluates upfront signs of critical problems to handle human routing decisions."""
@@ -106,7 +102,6 @@ class SupportAssistant:
         """Generates a support response for the given customer query."""
         if self.guard.requires_human(query):
             return "[ESCALATE] Transferring to a Customer Support Agent supervisor. Please contact our live priority queue directly at support@qtrade.com or call +250 7864645756."
-
         title, context_text = self.store.retrieve_closest(query)
 
         system_rules = (
@@ -139,7 +134,6 @@ class SupportAssistant:
 
             if title not in output and "I don't know" not in output:
                 output += f" (Source: {title})"
-                
             return output
         except errors.APIError as e:
             return f"[Runtime Error] API communication failure: {str(e)}"
@@ -148,16 +142,13 @@ class SupportAssistant:
 def main():
     """Entry point: initializes the client, store, and runs the support loop."""
     load_dotenv()
-    
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("[Error] Missing GEMINI_API_KEY environment variable. Please check your .env file.")
         sys.exit(1)
 
     print("Building local support indexes from help_docs.txt...")
-    
     client = genai.Client(api_key=api_key)
-    
     store = DocumentStore(client)
     store.load_documents("help_docs.txt")
     guard = EscalationGuard(client)
@@ -167,7 +158,6 @@ def main():
     print("       QTrade Support Voice Interface: Assistant QT    ")
     print("=======================================================")
     print("[Online] Type 'exit' or 'quit' to close the connection.\n")
-    
     while True:
         try:
             user_input = input("Customer: ").strip()
@@ -176,7 +166,6 @@ def main():
             if user_input.lower() in ["exit", "quit"]:
                 print("Closing support session. Goodbye.")
                 break
-                
             reply = assistant.answer_query(user_input)
             print(f"Assistant QT: {reply}\n")
         except (KeyboardInterrupt, EOFError):
