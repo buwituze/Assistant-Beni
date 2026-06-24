@@ -75,4 +75,4 @@ You can use the following patterns inside the command-line chat session to verif
 
 - **Severe Hardware Failure / Defect Triage**: `"I plugged the bulb in, it short-circuited and popped with a bit of smoke."` — Instantly intercepts the request and safely transfers to a human supervisor.
 
-View the Write up (here)[].
+#### View the write-up [here](https://github.com/buwituze/Assistant-Beni/blob/main/write-up.txt).
