@@ -3,6 +3,7 @@ import sys
 import numpy as np
 from dotenv import load_dotenv
 from google import genai
+from google.genai import errors
 
 class DocumentStore:
     """Parses text documents, generates embeddings, and handles retrieval via cosine similarity."""
@@ -37,7 +38,7 @@ class DocumentStore:
                 self.titles.append(title)
                 self.texts.append(text)
                 self.embeddings.append(response.embeddings[0].values)
-            except Exception as e:
+            except errors.APIError as e:
                 print(f"[API Error] Could not embed context segment '{title}': {e}")
                 sys.exit(1)
 
@@ -49,7 +50,7 @@ class DocumentStore:
                 contents=query
             )
             query_vector = response.embeddings[0].values
-        except Exception:
+        except errors.APIError:
             return self.titles[0], self.texts[0]
 
         similarities = []
@@ -91,7 +92,7 @@ class EscalationGuard:
                 }
             )
             return "TRUE" in response.text.strip().upper()
-        except Exception:
+        except errors.APIError:
             return False
 
 class SupportAssistant:
@@ -140,7 +141,7 @@ class SupportAssistant:
                 output += f" (Source: {title})"
                 
             return output
-        except Exception as e:
+        except errors.APIError as e:
             return f"[Runtime Error] API communication failure: {str(e)}"
 
 
