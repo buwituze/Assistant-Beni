@@ -1,6 +1,8 @@
 # QTrade Support Interface: Assistant QT
 
-An intelligent, production-grade Customer Support Assistant designed for QTrade smart-home devices. Built using Python, a clean object-oriented architecture, and the modern Google GenAI SDK, Assistant QT safely answers customer queries using strict Retrieval-Augmented Generation (RAG) principles.
+#### Note: View the write-up [here](https://github.com/buwituze/Assistant-Beni/blob/main/write-up.txt).
+
+A Customer Support Assistant designed for QTrade smart-home devices. Built using Python, a clean object-oriented architecture, and the modern Google GenAI SDK, Assistant QT safely answers customer queries using strict Retrieval-Augmented Generation (RAG) principles.
 
 The system implements strict deterministic guardrails to split safe informational responses ("I don't know") from high-priority human hands-off ("Escalation").
 
@@ -11,6 +13,8 @@ The system implements strict deterministic guardrails to split safe informationa
 2. **Strict RAG Grounding**: The system uses `gemini-embedding-2` to convert local support knowledge sections into vector points, retrieving context using a vectorized cosine-similarity matrix via `numpy`. Assistant QT is strictly bound to the retrieved context to prevent structural hallucinations.
 
 3. **Graceful Exceptions**: Any timeline threshold violations or high-liability hardware structural breakdowns (such as devices popping, sparking, or smoking) automatically exit the automation loop and cleanly pass to human supervision.
+
+4. **Contact Information**: The user/customer is iven contact information to reach out to in case of esclation instead of leavin them frustrated.
 
 ## Project Structure
 
@@ -74,5 +78,3 @@ You can use the following patterns inside the command-line chat session to verif
 - **Partial Match / Timeline Breach**: `"My order hasn't shipped in 4 days, where is it?"` — Triggers the business rule fallback to connect to priority customer support.
 
 - **Severe Hardware Failure / Defect Triage**: `"I plugged the bulb in, it short-circuited and popped with a bit of smoke."` — Instantly intercepts the request and safely transfers to a human supervisor.
-
-#### View the write-up [here](https://github.com/buwituze/Assistant-Beni/blob/main/write-up.txt).
