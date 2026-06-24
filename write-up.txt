@@ -1,0 +1,34 @@
+1. Alternate Escalation Policy
+
+My current system escalates immediately if a customer uses angry words, mentions a hardware safety defect, or if a documented timeline is breached.
+
+I could improve this by combining two alternative strategies. First, instead of letting the assistant give a dead-end "I don't know" response when it can't find an answer, the system will explicitly alert a human agent in the background while keeping the chat open. This prevents the customer from feeling stranded or losing trust in QTrade.
+
+Second, I can implement Sentiment-Driven Escalation. Instead of waiting for explicit keywords, the system tracks a rolling window of the user’s last three messages. If a basic text-sentiment analyzer detects a steady rise in user frustration, confusion or drop in tone (showin distrust), the assistant immediately routes the conversation to a human. This improves the experience by catching unhappy customers early, though it might increase human workload if users are naturally direct or brief.
+
+
+2. Building for Scale
+
+At 10× to 100× traffic and documents, two things break first. First, the Gemini free tier will drop connections and throw rate-limit errors due to concurrent requests. Second, my code in 'DocumentStore.retrieve_closest' will slow down significantly. Right now, it scans every single document vector one by one in a basic loop. With thousands of files, this sequential calculation creates a major processing bottleneck. I didn't optimize this in this task because a heavy database would be over-engineering for just four documents and there is also not much time.
+
+To build scalable project, I would shift my text chunks into a dedicated vector database like pgvector or Pinecone to ensure faster searches. I would also move the script into an asynchronous web framework like FastAPI to handle concurrent users cleanly.
+
+
+3. Quality & Regressions
+
+- An answer is good if it speaks plainly, addresses the user's question directly, and uses only the provided context. If the assistant cannot confidently verify the answer from the text, it must declare its limit or escalate rather than giving misleading information.
+
+- To catch quality drops before customers do, I would build an automated testing script that runs during code deployment. This script sends a baseline set of 50 customer questions to Assistant QT. I would then use a separate, isolated LLM instance to grade the output on two metrics: Is the answer fully supported by the files? and Did it directly resolve the issue? If the automated evaluation score drops below my target baseline, the update is blocked.
+
+
+4. Deployment & Monitoring
+
+To deploy this system to production, I would package the application code, dependencies, and configuration into a Docker container. This ensures the assistant runs identically on a cloud server as it does on my local machine. I would host this container on an auto-scaling platform like Google Cloud Run paired with FastAPI.
+
+For monitoring, I would use structured JSON logs and set up immediate alerts for three specific metrics:
+
+- API Failure Rate: If there is a sudden spike in 429 rate-limit errors or timeouts from the model provider.
+
+- Turnaround Latency: If the time it takes for a user to get a reply climbs past 2 seconds.
+
+- Escalation Rate Drift: If human routing jumps from a normal 10% baseline to 40%, signaling that a documentation update or code change broke the retrieval logic.

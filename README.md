@@ -49,7 +49,7 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Create a `.env` file in the root directory to store your credentials securely. Do not include the `export` keyword or quotes around the token.
+Create a `.env` file in the root directory to store your credentials securely.
 
 ```plaintext
 GEMINI_API_KEY=AIzaSyYourActualGeminiAPIKeyHere
@@ -74,3 +74,5 @@ You can use the following patterns inside the command-line chat session to verif
 - **Partial Match / Timeline Breach**: `"My order hasn't shipped in 4 days, where is it?"` — Triggers the business rule fallback to connect to priority customer support.
 
 - **Severe Hardware Failure / Defect Triage**: `"I plugged the bulb in, it short-circuited and popped with a bit of smoke."` — Instantly intercepts the request and safely transfers to a human supervisor.
+
+View the Write up (here)[].
