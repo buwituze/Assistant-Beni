@@ -14,7 +14,7 @@ The system implements strict deterministic guardrails to split safe informationa
 
 3. **Graceful Exceptions**: Any timeline threshold violations or high-liability hardware structural breakdowns (such as devices popping, sparking, or smoking) automatically exit the automation loop and cleanly pass to human supervision.
 
-4. **Contact Information**: The user/customer is iven contact information to reach out to in case of esclation instead of leavin them frustrated.
+4. **Support Team Contact Information**: On the customer facing message, the user is given contact information to reach out to in case of esclation instead of leaving them frustrated.
 
 ## Project Structure
 
