@@ -14,6 +14,7 @@ class DocumentStore:
         self.embedding_model = "gemini-embedding-2"
 
     def load_documents(self, filepath: str):
+        """Loads and embeds documents from a text file into the store."""
         if not os.path.exists(filepath):
             print(f"[Error] Knowledge file missing at: {filepath}")
             sys.exit(1)
@@ -69,6 +70,7 @@ class EscalationGuard:
         self.client = client
 
     def requires_human(self, query: str) -> bool:
+        """Returns True if the query requires escalation to a human agent."""
         prompt = (
             "You are a triage support classifier for QTrade smart-home retail devices.\n"
             "Analyze the customer query and reply with exactly 'TRUE' if it satisfies any condition, "
@@ -100,6 +102,7 @@ class SupportAssistant:
         self.client = client
 
     def answer_query(self, query: str) -> str:
+        """Generates a support response for the given customer query."""
         if self.guard.requires_human(query):
             return "[ESCALATE] Transferring to a Customer Support Agent supervisor. Please contact our live priority queue directly at support@qtrade.com or call +250 7864645756."
 
@@ -142,6 +145,7 @@ class SupportAssistant:
 
 
 def main():
+    """Entry point: initializes the client, store, and runs the support loop."""
     load_dotenv()
     
     api_key = os.environ.get("GEMINI_API_KEY")

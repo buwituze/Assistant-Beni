@@ -32,3 +32,12 @@ For monitoring, I would use structured JSON logs and set up immediate alerts for
 - Turnaround Latency: If the time it takes for a user to get a reply climbs past 2 seconds.
 
 - Escalation Rate Drift: If human routing jumps from a normal 10% baseline to 40%, signaling that a documentation update or code change broke the retrieval logic.
+
+
+5. My Goals fo the Stretch Task
+
+If given more time, I would focus on two valuable stretch features:
+
+Advanced Handoff Summary: My current script passes the name of the document that the escalation is based of and state the rule that caused escalating. I would expand this by using a fast LLM pass at the moment of handoff to generate a three-bullet summary for the human agent: the customer's core problem, what facts were already confirmed, and the exact reason automation stopped. This keeps the agent from making the customer repeat themselves.
+
+Minimal API Endpoint: I would wrap the assistant in a lightweight FastAPI structure. This would expose a single secure POST endpoint (/chat), allowing the application to easily connect to a web-based front-end interface alongside the current command-line script.
