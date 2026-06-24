@@ -3,7 +3,6 @@ import sys
 import numpy as np
 from dotenv import load_dotenv
 from google import genai
-from google.genai import types
 
 class DocumentStore:
     """Parses text documents, generates embeddings, and handles retrieval via cosine similarity."""
@@ -12,7 +11,6 @@ class DocumentStore:
         self.titles = []
         self.texts = []
         self.embeddings = []
-        # model variable
         self.embedding_model = "gemini-embedding-2"
 
     def load_documents(self, filepath: str):
@@ -23,7 +21,6 @@ class DocumentStore:
         with open(filepath, "r", encoding="utf-8") as f:
             content = f.read()
             
-        # Segments documents by looking for double newlines
         chunks = [c.strip() for c in content.split("\n\n") if c.strip()]
         
         for chunk in chunks:
@@ -52,7 +49,6 @@ class DocumentStore:
             )
             query_vector = response.embeddings[0].values
         except Exception:
-            # Safe operational fallback if embedding network drops mid-session
             return self.titles[0], self.texts[0]
 
         similarities = []
@@ -87,12 +83,14 @@ class EscalationGuard:
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
-                config=types.GenerateContentConfig(temperature=0.0, max_output_tokens=5)
+                config={
+                    "temperature": 0.0,
+                    "max_output_tokens": 5
+                }
             )
             return "TRUE" in response.text.strip().upper()
         except Exception:
-            return True  # Safe deterministic routing if connection fails
-
+            return False
 
 class SupportAssistant:
     """Coordinates state mapping between the safety gate, vector search, and model completion."""
@@ -103,7 +101,7 @@ class SupportAssistant:
 
     def answer_query(self, query: str) -> str:
         if self.guard.requires_human(query):
-            return "[ESCALATE] Route directly to a human support supervisor for manual intervention."
+            return "[ESCALATE] Transferring to a Customer Support Agent supervisor. Please contact our live priority queue directly at support@qtrade.com or call +250 7864645756."
 
         title, context_text = self.store.retrieve_closest(query)
 
@@ -122,20 +120,19 @@ class SupportAssistant:
             response = self.client.models.generate_content(
                 model="gemini-2.5-flash",
                 contents=prompt,
-                config=types.GenerateContentConfig(
-                    system_instruction=system_rules,
-                    temperature=0.0,
-                    max_output_tokens=200
-                )
+                config={
+                    "system_instruction": system_rules,
+                    "temperature": 0.0,
+                    "max_output_tokens": 200
+                }
             )
             output = response.text.strip()
 
             if "[ESCALATE_TRIGGER]" in output:
-                return f"[ESCALATE] This condition meets criteria for priority customer service according to {title}. Connecting you now."
+                return f"[ESCALATE] This condition meets criteria for priority customer service according to {title}. Please reach out to support@qtrade.com or call +1-800-555-0199 for direct assistance."
             if "I don't know" in output:
                 return "I don't know. I am sorry, but that information is not available in our current documentation."
 
-            # Safe formatting guarantee check
             if title not in output and "I don't know" not in output:
                 output += f" (Source: {title})"
                 
@@ -145,7 +142,6 @@ class SupportAssistant:
 
 
 def main():
-    # Load settings dynamically from the local secure .env file
     load_dotenv()
     
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -155,7 +151,6 @@ def main():
 
     print("Building local support indexes from help_docs.txt...")
     
-    # Initialize the client naturally; allowing the SDK to manage production v1 endpoints
     client = genai.Client(api_key=api_key)
     
     store = DocumentStore(client)
@@ -164,7 +159,7 @@ def main():
     assistant = SupportAssistant(store, guard, client)
 
     print("\n=======================================================")
-    print("       QTrade Support Voice Interface: Assistant QT      ")
+    print("       QTrade Support Voice Interface: Assistant QT    ")
     print("=======================================================")
     print("[Online] Type 'exit' or 'quit' to close the connection.\n")
     
