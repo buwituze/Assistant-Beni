@@ -1,0 +1,11 @@
+Doc 1: Returns & Refunds
+Items can be returned within 30 days of delivery. Unopened items receive a full refund. Opened items are subject to a 15% restocking fee unless the item is defective. Refunds are issued to the original payment method within 5–7 business days of the returned item being received. Items marked final sale cannot be returned.
+
+Doc 2: Shipping
+Standard shipping is free on orders over $50 and takes 3–5 business days. Express shipping is $15 and takes 1–2 business days. We currently ship within Africa only. A tracking number is emailed once an order ships; if an order has not shipped within 3 business days, contact support.
+
+Doc 3: SmartHub Setup & Troubleshooting
+To reset the SmartHub, hold the back button for 10 seconds until the light blinks amber. To connect to Wi-Fi, open the QTrade app, go to Devices > Add, and follow the prompts (2.4GHz networks only). If the hub won’t connect, restart your router and retry. Firmware updates install automatically overnight when the hub is powered and online.
+
+Doc 4: Warranty
+All devices include a 1-year limited warranty covering manufacturing defects. The warranty does not cover accidental damage, water damage, or normal wear. To file a claim, submit the order number and a description of the issue through the support portal; approved claims are repaired or replaced at QTrade’s discretion.
